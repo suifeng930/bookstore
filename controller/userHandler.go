@@ -1,0 +1,94 @@
+package controller
+
+import (
+	"bookstore/dao"
+	"bookstore/model"
+	"fmt"
+	"html/template"
+	"log"
+	"net/http"
+)
+
+// login  处理登录函数
+
+func Login(w http.ResponseWriter, r *http.Request) {
+
+	//获取前端传递过来的用户名，密码
+	username := r.PostFormValue("username")
+	password := r.PostFormValue("password")
+
+	fmt.Println("username", username)
+	//调用dao 处理用户请求
+	user, err := dao.CheckUsernameAndPassword(username, password)
+	log.Println(user)
+	if err != nil {
+		log.Println("查询数据失败：")
+	}
+	if user.Id > 0 {
+		// 用户名，密码正确
+		t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
+		t.Execute(w, "")
+	} else {
+		//用户名 密码不正确
+		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
+		//返回前端用户信息
+		t.Execute(w, "用户名或密码不正确！")
+	}
+
+}
+
+func Register(w http.ResponseWriter, r *http.Request) {
+
+	//获取传递过来的参数
+	username := r.PostFormValue("username")
+	password := r.PostFormValue("password")
+	emial := r.PostFormValue("email")
+
+	//根据用户名查询user
+	user, err := dao.CheckUsername(username)
+	if err != nil {
+		log.Println("查询用户失败")
+
+	}
+	log.Println(user)
+	if user.Id > 0 || err != nil {
+		// 用户名已存在
+		t := template.Must(template.ParseFiles("views/pages/user/regist.html"))
+		t.Execute(w, "用户名已存在")
+	} else {
+		//注册新用户
+		users := &model.User{
+			UserName: username,
+			Password: password,
+			Email:    emial,
+		}
+		saveUser := dao.SaveUser(users)
+		if saveUser != nil {
+			log.Println("插入用户数据失败了")
+		}
+		t := template.Must(template.ParseFiles("views/pages/user/regist_success.html"))
+		t.Execute(w, "")
+	}
+
+}
+
+// 通过验证ajax 验证用户名是否可用
+func CheckUserName(w http.ResponseWriter, r *http.Request) {
+	//获取传递过来的参数
+	username := r.PostFormValue("username")
+
+	user, err := dao.CheckUsername(username)
+	if err != nil {
+		log.Println("获取用户信息失败")
+	}
+	log.Println("获取的用户信息：", user)
+	if user.Id > 0 || err != nil {
+		// 用户名已存在
+		str := "用户名已存在"
+		w.Write([]byte(str))
+	} else {
+		str := "用户名可用"
+		w.Write([]byte(str))
+	}
+
+}
