@@ -3,6 +3,7 @@ package controller
 import (
 	"bookstore/dao"
 	"bookstore/model"
+	"bookstore/utils"
 	"fmt"
 	"html/template"
 	"log"
@@ -26,8 +27,27 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 	if user.Id > 0 {
 		// 用户名，密码正确
+		//  1.创建一个session
+		uuid := utils.CreateUUID()
+		session := &model.Session{}
+		session.SessionId = uuid
+		session.UserId = user.Id
+		session.Username = user.UserName
+		//2 将session 存储到session表中
+		err := dao.AddSession(session)
+		if err != nil {
+			log.Println("add session fails")
+		}
+		//  3.创建一个cookie ,让它与session关联
+		cookie := http.Cookie{
+			Name:     "user",
+			Value:    uuid,
+			HttpOnly: true,
+		}
+		// 4.将 cookie 发送给浏览器
+		http.SetCookie(w, &cookie)
 		t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
-		t.Execute(w, "")
+		t.Execute(w, user)
 	} else {
 		//用户名 密码不正确
 		t := template.Must(template.ParseFiles("views/pages/user/login.html"))

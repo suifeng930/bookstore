@@ -12,7 +12,8 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("views/static/"))))
 	http.Handle("/pages/", http.StripPrefix("/pages/", http.FileServer(http.Dir("views/pages/"))))
 
-	http.HandleFunc("/main", controller.IndexHandler)
+	//修改为有session 的参数
+	http.HandleFunc("/main", controller.GetPageBooksByPrice)
 
 	// 去登录页面
 	http.HandleFunc("/login", controller.Login)

@@ -79,6 +79,30 @@ func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
 		page, err = dao.GetPageBooks(pageNo)
 	}
 
+	// 1. 获取前台传递过来的cookie
+	cookies, err := r.Cookie("user")
+	if err != nil {
+		log.Println("get cookie is fail ", err.Error())
+	}
+	log.Println("cookies:", cookies)
+	if cookies != nil {
+		// 获取cookid values
+		sessionId := cookies.Value
+		//去数据库中根据sessionId 查询session
+		session, err := dao.GetSessionById(sessionId)
+		if err != nil {
+			log.Println("获取session 失败，", err.Error())
+		}
+		log.Println("session :", session)
+		if session.UserId != 0 {
+			//获取到session -----》 已经登录了
+			page.IsLogin = true
+			page.UserName = session.Username
+		}
+
+	}
+
+	log.Println("page:", page)
 	if err != nil {
 		log.Println("获取图书失败")
 	}

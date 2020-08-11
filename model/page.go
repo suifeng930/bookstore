@@ -9,6 +9,8 @@ type Page struct {
 	TotalRecord int64   //总记录数， 通过查询数据库得到的
 	MinPrice    string  //最低价
 	MaxPrice    string  //最高价 返回给前台
+	IsLogin     bool    //是否登录
+	UserName    string  //登录用户名
 }
 
 //判断分页信息
