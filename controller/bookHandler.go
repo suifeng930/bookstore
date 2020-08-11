@@ -98,6 +98,7 @@ func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
 			//获取到session -----》 已经登录了
 			page.IsLogin = true
 			page.UserName = session.Username
+
 		}
 
 	}
