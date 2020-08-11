@@ -118,6 +118,7 @@ func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
 //get books 获取所有图书
 //
 //func GetBooks(w http.ResponseWriter, r *http.Request) {
+
 //	//调用bookdao 获取所有图书的信息
 //	books, err := dao.GetBooks()
 //	if err != nil {
