@@ -57,6 +57,34 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// 用户注销处理
+func Logout(w http.ResponseWriter, r *http.Request) {
+
+	// 1.获取cookies
+	cookie, err := r.Cookie("user")
+	if err != nil {
+		log.Println("获取cookie 失败", err.Error())
+	}
+	if cookie != nil {
+
+		//获取cookie的value
+		sessionId := cookie.Value
+		//删除数据库中的cookie
+		err := dao.DeleteSession(sessionId)
+		if err != nil {
+			log.Println("删除 cookie 失败 ,", err.Error())
+		}
+		//设置cookie失效
+		cookie.MaxAge = -1
+		http.SetCookie(w, cookie)
+
+	}
+
+	//去首页
+	GetPageBooksByPrice(w, r)
+
+}
+
 func Register(w http.ResponseWriter, r *http.Request) {
 
 	//获取传递过来的参数

@@ -17,6 +17,8 @@ func main() {
 
 	// 去登录页面
 	http.HandleFunc("/login", controller.Login)
+	// 去注销页面
+	http.HandleFunc("/logout", controller.Logout)
 	// 去注册页面
 	http.HandleFunc("/regist", controller.Register)
 
