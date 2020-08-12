@@ -14,45 +14,55 @@ import (
 
 func Login(w http.ResponseWriter, r *http.Request) {
 
-	//获取前端传递过来的用户名，密码
-	username := r.PostFormValue("username")
-	password := r.PostFormValue("password")
+	// 判断是否已经登录了
 
-	fmt.Println("username", username)
-	//调用dao 处理用户请求
-	user, err := dao.CheckUsernameAndPassword(username, password)
-	log.Println(user)
-	if err != nil {
-		log.Println("查询数据失败：")
-	}
-	if user.Id > 0 {
-		// 用户名，密码正确
-		//  1.创建一个session
-		uuid := utils.CreateUUID()
-		session := &model.Session{}
-		session.SessionId = uuid
-		session.UserId = user.Id
-		session.Username = user.UserName
-		//2 将session 存储到session表中
-		err := dao.AddSession(session)
-		if err != nil {
-			log.Println("add session fails")
-		}
-		//  3.创建一个cookie ,让它与session关联
-		cookie := http.Cookie{
-			Name:     "user",
-			Value:    uuid,
-			HttpOnly: true,
-		}
-		// 4.将 cookie 发送给浏览器
-		http.SetCookie(w, &cookie)
-		t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
-		t.Execute(w, user)
+	flag, _ := dao.IsLogin(r)
+	if flag {
+		//已经登录了，
+		//去首页
+		GetPageBooksByPrice(w, r)
 	} else {
-		//用户名 密码不正确
-		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
-		//返回前端用户信息
-		t.Execute(w, "用户名或密码不正确！")
+
+		//获取前端传递过来的用户名，密码
+		username := r.PostFormValue("username")
+		password := r.PostFormValue("password")
+
+		fmt.Println("username", username)
+		//调用dao 处理用户请求
+		user, err := dao.CheckUsernameAndPassword(username, password)
+		log.Println(user)
+		if err != nil {
+			log.Println("查询数据失败：")
+		}
+		if user.Id > 0 {
+			// 用户名，密码正确
+			//  1.创建一个session
+			uuid := utils.CreateUUID()
+			session := &model.Session{}
+			session.SessionId = uuid
+			session.UserId = user.Id
+			session.Username = user.UserName
+			//2 将session 存储到session表中
+			err := dao.AddSession(session)
+			if err != nil {
+				log.Println("add session fails")
+			}
+			//  3.创建一个cookie ,让它与session关联
+			cookie := http.Cookie{
+				Name:     "user",
+				Value:    uuid,
+				HttpOnly: true,
+			}
+			// 4.将 cookie 发送给浏览器
+			http.SetCookie(w, &cookie)
+			t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
+			t.Execute(w, user)
+		} else {
+			//用户名 密码不正确
+			t := template.Must(template.ParseFiles("views/pages/user/login.html"))
+			//返回前端用户信息
+			t.Execute(w, "用户名或密码不正确！")
+		}
 	}
 
 }

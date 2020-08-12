@@ -4,6 +4,7 @@ import (
 	"bookstore/model"
 	"bookstore/utils"
 	"log"
+	"net/http"
 )
 
 // add Session   向数据库中添加session
@@ -48,5 +49,34 @@ func GetSessionById(sessionId string) (*model.Session, error) {
 	session := &model.Session{}
 	row.Scan(&session.SessionId, &session.Username, &session.UserId)
 	return session, nil
+
+}
+
+// 判断用户登录的方法 ，加入cookie
+// false  没有登录
+// true   用户已经登录
+func IsLogin(r *http.Request) (bool, string) {
+	// 1. 获取前台传递过来的cookie
+	cookies, err := r.Cookie("user")
+	if err != nil {
+		log.Println("get cookie is fail ", err.Error())
+	}
+	log.Println("cookies:", cookies)
+	if cookies != nil {
+		// 获取cookid values
+		sessionId := cookies.Value
+		//去数据库中根据sessionId 查询session
+		session, err := GetSessionById(sessionId)
+		if err != nil {
+			log.Println("获取session 失败，", err.Error())
+		}
+		log.Println("session :", session)
+		if session.UserId > 0 {
+			//已经登录
+			return true, session.Username
+		}
+	}
+
+	return false, ""
 
 }

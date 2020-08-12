@@ -102,6 +102,11 @@ func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
+	flag, username := dao.IsLogin(r)
+	if flag {
+		page.IsLogin = true
+		page.UserName = username
+	}
 
 	log.Println("page:", page)
 	if err != nil {
