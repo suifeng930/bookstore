@@ -11,7 +11,8 @@ type CartItem struct {
 
 //GetAmou
 func (cartItem *CartItem) GetAmount() float64 {
-	price := cartItem.Book.Price
+	book := cartItem.Book
+	price := book.Price
 	return float64(cartItem.Count) * price
 
 }

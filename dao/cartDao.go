@@ -51,3 +51,14 @@ func GetCartByUserId(userId int) (*model.Cart, error) {
 	return cart, nil
 
 }
+
+//更新购物车中的图书和总数量和总金额
+func UpdateCart(cart *model.Cart) error {
+	sqlStr := "update carts set total_count=?,total_amount=? where id=?"
+	_, err := utils.Db.Exec(sqlStr, cart.GetTotalCount(), cart.GetTotalAmount(), cart.CartId)
+	if err != nil {
+		log.Println("update cart is fail ,", err.Error())
+		return err
+	}
+	return nil
+}
