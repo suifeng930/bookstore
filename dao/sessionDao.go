@@ -55,7 +55,7 @@ func GetSessionById(sessionId string) (*model.Session, error) {
 // 判断用户登录的方法 ，加入cookie
 // false  没有登录
 // true   用户已经登录
-func IsLogin(r *http.Request) (bool, string) {
+func IsLogin(r *http.Request) (bool, *model.Session) {
 	// 1. 获取前台传递过来的cookie
 	cookies, err := r.Cookie("user")
 	if err != nil {
@@ -73,10 +73,10 @@ func IsLogin(r *http.Request) (bool, string) {
 		log.Println("session :", session)
 		if session.UserId > 0 {
 			//已经登录
-			return true, session.Username
+			return true, session
 		}
 	}
 
-	return false, ""
+	return false, nil
 
 }

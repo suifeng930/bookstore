@@ -5,6 +5,26 @@
     <title>书城首页</title>
     <link type="text/css" rel="stylesheet" href="/static/css/style.css">
     <script src="/static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            //给添加购物车按钮绑定单击事件
+            $(".addBook2Cart").click(function () {
+
+                // 获取要添加的图书的id
+                var bookId=$(this).attr("id");
+                //设置请求url
+                var url="/addBook2Cart";
+                //设置请求参数
+                var param ={"bookId":bookId};
+                //发送Ajax请求
+                $.post(url,param,function (res) {
+
+                    alert("点击成功");
+                });
+
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -69,7 +89,8 @@
                         <span class="sp2">{{.Stock}}</span>
                     </div>
                     <div class="book_add">
-                        <button>加入购物车</button>
+                        <button class="addBook2Cart" id="{{.Id}}">加入购物车</button>
+                        <input type="hidden" name="bookId" value="{{.Id}}" />
                     </div>
                 </div>
             </div>

@@ -42,7 +42,7 @@ func GetPageBooks(w http.ResponseWriter, r *http.Request) {
 	page, err := dao.GetPageBooks(pageNo)
 
 	if err != nil {
-		log.Println("获取图书失败")
+		log.Println("获取图书失败111")
 	}
 	//解析模板文件views/pages/manager/book_manager.html
 	t := template.Must(template.ParseFiles("views/pages/manager/book_manager.html"))
@@ -105,12 +105,12 @@ func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
 	flag, username := dao.IsLogin(r)
 	if flag {
 		page.IsLogin = true
-		page.UserName = username
+		page.UserName = username.Username
 	}
 
 	log.Println("page:", page)
 	if err != nil {
-		log.Println("获取图书失败")
+		log.Println("获取图书失败222")
 	}
 	//解析模板文件views/pages/manager/book_manager.html
 	t := template.Must(template.ParseFiles("views/index.html"))

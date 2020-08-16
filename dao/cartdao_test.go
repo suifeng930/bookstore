@@ -13,6 +13,7 @@ func TestSaveCart(t *testing.T) {
 	//t.Run("测试添加购物车", TestAddCart)
 	t.Run("通过bookId 获取cartItem", TestGetCartItemByBookId)
 	t.Run("通过cartId 获取cart", TestGetCartItemByCartId)
+	t.Run("通过userId 获取cart", TestGetCartByUserId)
 
 }
 
@@ -83,5 +84,16 @@ func TestGetCartItemByCartId(t *testing.T) {
 		log.Printf("第%v 个购物项是： %v \n", key+1, value)
 
 	}
+
+}
+
+func TestGetCartByUserId(t *testing.T) {
+	userId := 1
+	cart, err := GetCartByUserId(userId)
+	if err != nil {
+		log.Println("获取cart失败")
+
+	}
+	log.Println(cart)
 
 }
