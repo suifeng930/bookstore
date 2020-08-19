@@ -38,6 +38,18 @@ func GetCartItemByBookIdAndCartId(bookId string, cartId string) (*model.CartItem
 
 }
 
+// 根据图书的id 和购物车的id 以及图书的数量更新购物车项中图书的数量
+func UpdateBookCount(item *model.CartItem) error {
+	sqlStr := "update cart_items set count=?,amount=? where book_id=? and cart_id=?"
+	_, err := utils.Db.Exec(sqlStr, item.Count, item.GetAmount(), item.Book.Id, item.CartId)
+	if err != nil {
+		log.Println("更新图书信息，by bookId and cartId ", err.Error())
+		return err
+	}
+	return nil
+
+}
+
 //根据购物车id 查询所有的购物项
 func GetCartItemByCartId(cartId string) ([]*model.CartItem, error) {
 	sqlStr := "select id,count,amount,book_id,cart_id from cart_items where cart_id=?"
@@ -63,17 +75,5 @@ func GetCartItemByCartId(cartId string) ([]*model.CartItem, error) {
 		cartItems = append(cartItems, cartItem)
 	}
 	return cartItems, nil
-
-}
-
-// 根据图书的id 和购物车的id 以及图书的数量更新购物车项中图书的数量
-func UpdateBookCount(bookCount int64, bookId int, cartId string) error {
-	sqlStr := "update cart_items set count=? where book_id=? and cart_id=?"
-	_, err := utils.Db.Exec(sqlStr, bookCount, bookId, cartId)
-	if err != nil {
-		log.Println("更新图书信息，by bookId and cartId ", err.Error())
-		return err
-	}
-	return nil
 
 }

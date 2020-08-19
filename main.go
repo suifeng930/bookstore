@@ -42,6 +42,9 @@ func main() {
 	//添加图书到购物车
 	http.HandleFunc("/addBook2Cart", controller.AddBook2Cart)
 
+	//获取购物车信息
+	http.HandleFunc("/getCartInfo", controller.GetCartInfo)
+
 	serve := http.ListenAndServe(":8080", nil)
 	if serve != nil {
 		log.Println(serve)
