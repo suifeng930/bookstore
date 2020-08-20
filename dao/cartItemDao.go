@@ -77,3 +77,14 @@ func GetCartItemByCartId(cartId string) ([]*model.CartItem, error) {
 	return cartItems, nil
 
 }
+
+// 根据购物车id 删除购物项
+func DeleteCartItemByCartId(cartId string) error {
+	sql := "delete from cart_items where cart_id=?"
+	_, err := utils.Db.Exec(sql, cartId)
+	if err != nil {
+		log.Println(" delete by cartId is fail :", err.Error())
+		return err
+	}
+	return nil
+}

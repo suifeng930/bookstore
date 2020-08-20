@@ -148,3 +148,15 @@ func GetCartInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+// 删除购物车by cartId
+func DeleteCart(w http.ResponseWriter, r *http.Request) {
+
+	//获取要删除的购物车id
+	cartId := r.FormValue("cartId")
+	//清空购物车
+	dao.DeleteCartByCartId(cartId)
+	//调用getCartInfo  查询购物车信息
+	GetCartInfo(w, r)
+
+}

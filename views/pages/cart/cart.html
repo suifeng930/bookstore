@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <title>购物车</title>
     <link type="text/css" rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function () {
+            //给清空购物车的超链接绑定单击事件
+            $("#emptyCart").click(function () {
+                return confirm("亲！确定要清空购物车吗？三思啊！~~~~(>_<)~~~~");
+            });
+        });
+    </script>
 </head>
 <body>
 
