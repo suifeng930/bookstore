@@ -125,11 +125,26 @@ func GetCartInfo(w http.ResponseWriter, r *http.Request) {
 	if cart != nil {
 		//存在购物车
 		//解析模板文件
-		cart.UserName = session.Username
+		session.Cart = cart
 		log.Println("cart is :", cart)
+		log.Println("session is -->:", session)
+
 		t := template.Must(template.ParseFiles("views/pages/cart/cart.html"))
 		//执行
-		t.Execute(w, cart)
+		err := t.Execute(w, session)
+		if err != nil {
+			log.Println(err.Error())
+		}
+	} else {
+		//用户还没有购物车
+		log.Println("===============================")
+		log.Println("session is -->:", session)
+		t := template.Must(template.ParseFiles("views/pages/cart/cart.html"))
+		//执行
+		err := t.Execute(w, session)
+		if err != nil {
+			log.Println(err.Error())
+		}
 	}
 
 }

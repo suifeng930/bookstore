@@ -59,7 +59,7 @@ func IsLogin(r *http.Request) (bool, *model.Session) {
 	// 1. 获取前台传递过来的cookie
 	cookies, err := r.Cookie("user")
 	if err != nil {
-		log.Println("get cookie is fail ", err.Error())
+		log.Println("get cookie is fail---> ", err.Error())
 	}
 	log.Println("cookies:", cookies)
 	if cookies != nil {
