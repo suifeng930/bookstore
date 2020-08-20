@@ -43,7 +43,7 @@ func AddBook2Cart(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Println(" GetCartItemByBookIdAndCartId get cart book is fails ,", err.Error())
 			}
-			log.Println("要添加的cartItem 是：", cartItem)
+			log.Println("要添加的cartItem 是--：", cartItem)
 			if cartItem != nil {
 				//购物车的购物项已经存在，只需要更改购物项数量
 				//1.获取购物车的所有购物项
@@ -156,6 +156,44 @@ func DeleteCart(w http.ResponseWriter, r *http.Request) {
 	cartId := r.FormValue("cartId")
 	//清空购物车
 	dao.DeleteCartByCartId(cartId)
+	//调用getCartInfo  查询购物车信息
+	GetCartInfo(w, r)
+
+}
+
+// 删除购物项 by cartItemId
+func DeleteCartItem(w http.ResponseWriter, r *http.Request) {
+
+	//获取要删除的购物车id
+	cartItemId := r.FormValue("cartItemId")
+	log.Println("要删除的购物项id 是：", cartItemId)
+	iCartItemId, _ := strconv.ParseInt(cartItemId, 10, 64)
+	//获取session
+	_, session := dao.IsLogin(r)
+	//获取用户id
+	userId := session.UserId
+	//通过用户id查询购物车
+	cart, err := dao.GetCartByUserId(userId)
+	if err != nil {
+		log.Println("获取购物车信息失败，", err)
+	}
+	//获取到购物车中的购物项
+	cartItems := cart.CartItems
+	//遍历购物项列表
+	for key, value := range cartItems {
+		if value.CartItemId == iCartItemId {
+			//删除购物项，移除当前购物项
+			cartItems = append(cartItems[:key], cartItems[key+1:]...)
+			//删除购物项
+			err := dao.DeleteCartItemById(cartItemId)
+			if err != nil {
+				log.Println("删除购物项失败", err.Error())
+			}
+			//更新ITEMS
+			cart.CartItems = cartItems
+		}
+		dao.UpdateCart(cart)
+	}
 	//调用getCartInfo  查询购物车信息
 	GetCartInfo(w, r)
 

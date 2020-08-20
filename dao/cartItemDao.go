@@ -28,11 +28,11 @@ func GetCartItemByBookIdAndCartId(bookId string, cartId string) (*model.CartItem
 	cartItem := &model.CartItem{}
 	err := row.Scan(&cartItem.CartItemId, &cartItem.Count, &cartItem.Amount, &cartItem.CartId)
 	if err != nil {
-		log.Println("get cartItem is fail ", err.Error())
+		log.Printf("get cartItem is fail  byCartId :%v  bookId :%v err: %+v\n", cartId, bookId, err.Error())
 		return nil, err
 	}
 	bookID, err := strconv.Atoi(bookId)
-	book, err := GetBookById(bookID)
+	book, _ := GetBookById(bookID)
 	cartItem.Book = book
 	return cartItem, nil
 
@@ -59,13 +59,14 @@ func GetCartItemByCartId(cartId string) ([]*model.CartItem, error) {
 		return nil, err
 	}
 	var cartItems []*model.CartItem
-	cartItem := &model.CartItem{}
 	for rows.Next() {
+		//一定要放在这里，不然，指针会被重用，会有业务报错
+		cartItem := &model.CartItem{}
 		var bookId string
 
 		err := rows.Scan(&cartItem.CartItemId, &cartItem.Count, &cartItem.Amount, &bookId, &cartItem.CartId)
 		if err != nil {
-			log.Println("get cartItem is fail ", err.Error())
+			log.Printf("get cartItem is fail  byCartId :%v err: %+v\n", cartId, err.Error())
 			return nil, err
 		}
 		//根据bookId 获取图书信息
@@ -87,4 +88,17 @@ func DeleteCartItemByCartId(cartId string) error {
 		return err
 	}
 	return nil
+}
+
+// 根据购物项的id 删除购物项
+func DeleteCartItemById(cartItemId string) error {
+
+	sql := "delete from cart_items where id=?"
+	_, err := utils.Db.Exec(sql, cartItemId)
+	if err != nil {
+		log.Println("delete cartItem by id is fail ", err.Error())
+		return err
+	}
+	return nil
+
 }

@@ -11,6 +11,13 @@
             $("#emptyCart").click(function () {
                 return confirm("亲！确定要清空购物车吗？三思啊！~~~~(>_<)~~~~");
             });
+            //给删除购物项绑定单机事件
+            $(".deleteCartItem").click(function () {
+                // 获取图书的名称
+                var  title=$(this).attr("id");
+                return confirm("确定要删除【"+title+"】这本嘛");
+
+            });
         });
     </script>
 </head>
@@ -52,7 +59,7 @@
                     <td>{{.Count}}</td>
                     <td>{{.Book.Price}}</td>
                     <td>{{.Amount}}</td>
-                    <td><a href="#">删除</a></td>
+                    <td><a id="{{.Book.Title}}" class="deleteCartItem" href="/deleteCartItem?cartItemId={{.CartItemId}}">删除</a></td>
                 </tr>
             {{end}}
         </table>
