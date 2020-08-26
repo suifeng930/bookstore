@@ -50,6 +50,9 @@ func main() {
 	//删除购物项
 	http.HandleFunc("/deleteCartItem", controller.DeleteCartItem)
 
+	//更新购物项
+	http.HandleFunc("/updateCartItem", controller.UpdateCartItem)
+
 	serve := http.ListenAndServe(":8080", nil)
 	if serve != nil {
 		log.Println(serve)

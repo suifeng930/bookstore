@@ -18,6 +18,16 @@
                 return confirm("确定要删除【"+title+"】这本嘛");
 
             });
+            //给输入购物项数量绑定change事件
+            $(".updateCartItem").change(function () {
+                alert("hhh");
+                //获取当前购物项id
+                var cartItemId =$(this).attr("id");
+                //获取图书的数量
+                var bookCount= $(this).val();
+                //发送请求
+                location="/updateCartItem?cartItemId="+cartItemId+"&bookCount="+bookCount;
+            });
         });
     </script>
 </head>
@@ -56,7 +66,9 @@
             {{range .Cart.CartItems}}
                 <tr>
                     <td>{{.Book.Title}}</td>
-                    <td>{{.Count}}</td>
+                    <td>
+                        <input id="{{.CartItemId}}" class="updateCartItem" type="text" value="{{.Count}}" style="text-align: center;width: 50px;"/>
+                    </td>
                     <td>{{.Book.Price}}</td>
                     <td>{{.Amount}}</td>
                     <td><a id="{{.Book.Title}}" class="deleteCartItem" href="/deleteCartItem?cartItemId={{.CartItemId}}">删除</a></td>
