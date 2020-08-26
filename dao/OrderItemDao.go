@@ -13,6 +13,7 @@ func AddOrderItems(item *model.OrderItem) error {
 	if err != nil {
 		log.Println("insert into orderItems is fail ", err.Error())
 		return err
+
 	}
 	return nil
 
