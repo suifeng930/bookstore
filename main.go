@@ -55,6 +55,9 @@ func main() {
 	//去结账
 	http.HandleFunc("/checkout", controller.CheckOut)
 
+	//订单管理
+	http.HandleFunc("/getOrders", controller.GetOrders)
+
 	serve := http.ListenAndServe(":8080", nil)
 	if serve != nil {
 		log.Println(serve)

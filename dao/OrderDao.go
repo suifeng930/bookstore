@@ -19,3 +19,24 @@ func AddOrder(order *model.Order) error {
 	return nil
 
 }
+
+// getOrders   获取所有的购物车
+func GetOrders() ([]*model.Order, error) {
+	spl := "select id,create_time,total_count,total_amount,state,user_id from orders  "
+	rows, err := utils.Db.Query(spl)
+	if err != nil {
+		log.Println("getOrders is fail :", err.Error())
+		return nil, err
+	}
+	var orders []*model.Order
+	for rows.Next() {
+		order := &model.Order{}
+		err := rows.Scan(&order.OrderId, &order.CreateTime, &order.TotalCount, &order.TotalAmount, &order.State, &order.UserId)
+		if err != nil {
+			log.Println("getOrders is fail ", err.Error())
+		}
+		orders = append(orders, order)
+	}
+	return orders, nil
+
+}

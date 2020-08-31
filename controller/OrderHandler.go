@@ -79,3 +79,19 @@ func CheckOut(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+//getorders  获取数据库中所有的订单
+func GetOrders(w http.ResponseWriter, r *http.Request) {
+	orders, err := dao.GetOrders()
+	if err != nil {
+		log.Println(" 获取数据库失败", err.Error())
+	}
+	//解析模板
+	t := template.Must(template.ParseFiles("views/pages/order/order_manager.html"))
+
+	err = t.Execute(w, orders)
+	if err != nil {
+		log.Println(" 解析模板失败：", err.Error())
+
+	}
+}
