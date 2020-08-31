@@ -23,9 +23,10 @@ func CheckOut(w http.ResponseWriter, r *http.Request) {
 
 	//构造订单项
 	orderId := utils.CreateUUID()
+	dataString := time.Now().Format("2006-01-02 15:04:05")
 	order := &model.Order{
 		OrderId:     orderId,
-		CreateTime:  time.Time{},
+		CreateTime:  dataString,
 		TotalCount:  cart.TotalCount,
 		TotalAmount: cart.TotalAmount,
 		State:       0,
@@ -56,8 +57,8 @@ func CheckOut(w http.ResponseWriter, r *http.Request) {
 		}
 		//更新图书信息
 		book := value.Book
-		book.Sales = book.Sales - int(value.Count)
-		book.Stock = book.Stock + int(value.Count)
+		book.Sales = book.Sales + int(value.Count)
+		book.Stock = book.Stock - int(value.Count)
 		err = dao.UpdateBook(book)
 		if err != nil {
 			log.Println("更新图书信息失败：", err.Error())
