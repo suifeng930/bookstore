@@ -40,3 +40,26 @@ func GetOrders() ([]*model.Order, error) {
 	return orders, nil
 
 }
+
+//通过用户id 获取订单列表
+func GetOrdersByUserId(userId int) ([]*model.Order, error) {
+	sqlStr := "select id,create_time,total_count,total_amount,state,user_id from orders  where user_id=? "
+	rows, err := utils.Db.Query(sqlStr, userId)
+	if err != nil {
+		log.Println("get orders by userId is fail ：", err.Error())
+		return nil, err
+	}
+	var orders []*model.Order
+	for rows.Next() {
+		order := &model.Order{}
+		err := rows.Scan(&order.OrderId, &order.CreateTime, &order.TotalCount, &order.TotalAmount, &order.State, &order.UserId)
+		if err != nil {
+			log.Println("get orders is fail :", err.Error())
+			return nil, err
+		}
+		orders = append(orders, order)
+	}
+	log.Println("orders:", orders)
+	return orders, nil
+
+}

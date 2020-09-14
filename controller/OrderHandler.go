@@ -70,7 +70,7 @@ func CheckOut(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(" 清空购物车失败 ；", err.Error())
 	}
-	session.OrderId = orderId
+	session.Order = order
 	//解析模板
 	t := template.Must(template.ParseFiles("views/pages/cart/checkout.html"))
 	err = t.Execute(w, session)
@@ -94,4 +94,42 @@ func GetOrders(w http.ResponseWriter, r *http.Request) {
 		log.Println(" 解析模板失败：", err.Error())
 
 	}
+}
+
+//获取订单详细
+func GetOrderItemByOrderId(w http.ResponseWriter, r *http.Request) {
+
+	//获取订单id
+	orderId := r.FormValue("orderId")
+	//获取订单项
+	orderItems, _ := dao.GetOrderItemsByOrderrId(orderId)
+	log.Println(orderItems)
+	t := template.Must(template.ParseFiles("views/pages/order/order_info.html"))
+	err := t.Execute(w, orderItems)
+	if err != nil {
+		log.Println(" 解析模板失败：", err.Error())
+
+	}
+}
+
+//根据用户id 获取订单详情
+func GetMyOrders(w http.ResponseWriter, r *http.Request) {
+
+	_, session := dao.IsLogin(r)
+	//获取用户id
+	userId := session.UserId
+	//获取订单列表
+	orders, err := dao.GetOrdersByUserId(userId)
+	if err != nil {
+		log.Println("获取订单失败", err.Error())
+	}
+	session.Orders = orders
+
+	t := template.Must(template.ParseFiles("views/pages/order/order.html"))
+	err = t.Execute(w, session)
+	if err != nil {
+		log.Println(" 解析模板失败：", err.Error())
+
+	}
+
 }

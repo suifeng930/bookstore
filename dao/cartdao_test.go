@@ -61,13 +61,13 @@ func TestAddCart(t *testing.T) {
 
 func TestGetCartItemByBookId(t *testing.T) {
 
-	bookId := "34"
-
-	item, err := GetCartItemByBookId(bookId)
-	if err != nil {
-		log.Println("获取购物项失败")
-	}
-	log.Println(item)
+	//bookId := "34"
+	//
+	//item, err := GetCartItemByBookId(bookId)
+	//if err != nil {
+	//	log.Println("获取购物项失败")
+	//}
+	//log.Println(item)
 
 }
 

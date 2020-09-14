@@ -6,5 +6,6 @@ type Session struct {
 	Username  string //username
 	UserId    int    //userId
 	Cart      *Cart
-	OrderId   string
+	Order     *Order
+	Orders    []*Order
 }
