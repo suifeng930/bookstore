@@ -133,3 +133,27 @@ func GetMyOrders(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+// SendOrder 发货
+func SendOrder(w http.ResponseWriter, r *http.Request) {
+
+	orderId := r.FormValue("orderId")
+
+	err := dao.UpdateOrderStateByOrderId(orderId, 1)
+	if err != nil {
+		log.Println("更新订单状态信息失败：", err)
+	}
+	GetOrders(w, r)
+}
+
+// SendOrder 发货
+func TakeOrder(w http.ResponseWriter, r *http.Request) {
+
+	orderId := r.FormValue("orderId")
+
+	err := dao.UpdateOrderStateByOrderId(orderId, 2)
+	if err != nil {
+		log.Println("更新订单状态信息失败：", err)
+	}
+	GetMyOrders(w, r)
+}

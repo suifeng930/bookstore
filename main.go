@@ -63,6 +63,10 @@ func main() {
 	//获取我的订单
 	http.HandleFunc("/getMyOrder", controller.GetMyOrders)
 
+	//发货
+	http.HandleFunc("/sendOrder", controller.SendOrder)
+	//收货
+	http.HandleFunc("/takeOrder", controller.TakeOrder)
 	serve := http.ListenAndServe(":8080", nil)
 	if serve != nil {
 		log.Println(serve)

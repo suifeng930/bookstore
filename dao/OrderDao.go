@@ -63,3 +63,15 @@ func GetOrdersByUserId(userId int) ([]*model.Order, error) {
 	return orders, nil
 
 }
+
+// 更新订单状态信息 通过订单id
+func UpdateOrderStateByOrderId(orderId string, state int64) error {
+	sql := "update orders set state=? where id=?"
+	_, err := utils.Db.Exec(sql, state, orderId)
+	if err != nil {
+		log.Println("更新订单状态失败", err.Error())
+		return err
+	}
+	return nil
+
+}
